@@ -27,9 +27,9 @@ export default function AuthButton() {
     window.location.reload();
   }
 
-  if (!user) {
-    return (
-      <div className="hidden items-center gap-3 md:flex">
+if (!user) {
+  return (
+    <div className="flex flex-col gap-3">
         <Link
           href="/login"
           className="text-sm font-medium hover:text-sky-600"
@@ -47,8 +47,8 @@ export default function AuthButton() {
     );
   }
 
-  return (
-    <div className="hidden items-center gap-3 md:flex">
+ return (
+  <div className="flex flex-col gap-3">
       <div className="flex items-center gap-2">
         <User size={18} />
 
