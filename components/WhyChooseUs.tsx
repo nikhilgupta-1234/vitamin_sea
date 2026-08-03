@@ -1,60 +1,83 @@
-import { ShieldCheck, Gem, Truck, HeartHandshake } from "lucide-react";
+import {
+  ShieldCheck,
+  Gem,
+  Truck,
+  HeartHandshake,
+} from "lucide-react";
 
 const features = [
   {
-    icon: <Gem size={40} className="text-sky-500" />,
+    icon: <Gem size={38} />,
     title: "Handmade",
-    description: "Every piece is handcrafted with love and attention to detail.",
+    description:
+      "Every piece is handcrafted with love and attention to every little detail.",
   },
   {
-    icon: <ShieldCheck size={40} className="text-sky-500" />,
+    icon: <ShieldCheck size={38} />,
     title: "Premium Quality",
-    description: "Made with natural shells, pearls, and durable materials.",
+    description:
+      "Made using carefully selected natural shells, pearls and durable materials.",
   },
   {
-    icon: <Truck size={40} className="text-sky-500" />,
+    icon: <Truck size={38} />,
     title: "Fast Delivery",
-    description: "Quick and secure shipping across India.",
+    description:
+      "Quick, safe and reliable shipping across India with secure packaging.",
   },
   {
-    icon: <HeartHandshake size={40} className="text-sky-500" />,
+    icon: <HeartHandshake size={38} />,
     title: "Customer First",
-    description: "Friendly support and hassle-free shopping experience.",
+    description:
+      "Friendly support, easy returns and a hassle-free shopping experience.",
   },
 ];
 
 export default function WhyChooseUs() {
   return (
-    <section className="bg-[#F8F4EC] py-20">
-      <div className="max-w-7xl mx-auto px-6">
+    <section className="bg-[#F8F4EC] py-14 sm:py-16 lg:py-24">
+      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
 
-        <h2 className="text-4xl font-serif text-center text-[#143D60] mb-14">
-          Why Choose Vitamin Sea?
-        </h2>
+        {/* Heading */}
+        <div className="mx-auto mb-12 max-w-3xl text-center lg:mb-16">
 
-        <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-4">
+          <h2 className="font-serif text-3xl text-[#143D60] sm:text-4xl lg:text-5xl">
+            Why Choose Vitamin Sea?
+          </h2>
+
+          <p className="mt-4 text-gray-600 sm:text-lg">
+            Beautiful handcrafted sea-inspired accessories designed
+            to bring elegance, quality and a touch of the ocean to
+            your everyday style.
+          </p>
+
+        </div>
+
+        {/* Cards */}
+        <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 xl:grid-cols-4">
 
           {features.map((item) => (
             <div
               key={item.title}
-              className="bg-white rounded-3xl shadow-md p-8 text-center hover:shadow-xl transition"
+              className="group flex h-full flex-col rounded-3xl bg-white p-8 text-center shadow-sm transition-all duration-300 hover:-translate-y-2 hover:shadow-2xl"
             >
-              <div className="flex justify-center mb-5">
+              {/* Icon */}
+              <div className="mx-auto mb-6 flex h-20 w-20 items-center justify-center rounded-full bg-sky-50 text-sky-500 transition group-hover:bg-sky-500 group-hover:text-white">
                 {item.icon}
               </div>
 
-              <h3 className="text-xl font-semibold mb-3">
+              {/* Title */}
+              <h3 className="text-xl font-semibold text-[#143D60]">
                 {item.title}
               </h3>
 
-              <p className="text-gray-600 text-sm">
+              {/* Description */}
+              <p className="mt-4 flex-grow leading-7 text-gray-600">
                 {item.description}
               </p>
             </div>
           ))}
 
         </div>
-
       </div>
     </section>
   );

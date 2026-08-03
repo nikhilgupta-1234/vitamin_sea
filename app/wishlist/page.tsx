@@ -2,8 +2,9 @@
 
 import Link from "next/link";
 import { Heart } from "lucide-react";
+
 import { useAppSelector } from "@/store/hooks";
-import ProductCard from "@/components/ProductCard";
+import ProductCard from "@/components/shop/ProductCard";
 
 export default function WishlistPage() {
   const items = useAppSelector(

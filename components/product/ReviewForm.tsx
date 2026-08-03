@@ -9,7 +9,9 @@ interface Props {
   productId: number;
 }
 
-export default function ReviewForm({ productId }: Props) {
+export default function ReviewForm({
+  productId,
+}: Props) {
   const router = useRouter();
 
   const [rating, setRating] = useState(5);
@@ -47,33 +49,44 @@ export default function ReviewForm({ productId }: Props) {
     } catch (err: any) {
       console.error(err);
 
-      if (err.message === "Please login to submit a review.") {
-        alert("Please login to submit a review.");
-      } else {
-        alert(err.message || "Something went wrong while submitting your review.");
-      }
+      alert(
+        err.message ||
+          "Something went wrong. Please try again."
+      );
     } finally {
       setLoading(false);
     }
   }
 
   return (
-    <section className="mt-16 rounded-[32px] bg-white p-8 shadow-sm">
-      <h2 className="text-3xl font-bold text-[#143D60]">
-        Write a Review
-      </h2>
+    <section className="mt-14 rounded-3xl bg-white p-6 shadow-sm sm:mt-16 sm:p-8 lg:mt-20 lg:p-10">
 
-      <p className="mt-2 text-gray-500">
-        Share your experience with this product.
-      </p>
+      <div className="mb-8 text-center">
+
+        <p className="text-sm font-semibold uppercase tracking-[4px] text-sky-500">
+          Share Your Experience
+        </p>
+
+        <h2 className="mt-2 font-serif text-3xl text-[#143D60] sm:text-4xl">
+          Write a Review
+        </h2>
+
+        <p className="mt-3 text-gray-500">
+          We'd love to hear what you think about this product.
+        </p>
+
+      </div>
 
       {/* Rating */}
-      <div className="mt-8">
-        <label className="mb-3 block font-medium text-gray-700">
-          Rating
+
+      <div>
+
+        <label className="mb-4 block font-semibold text-gray-700">
+          Your Rating
         </label>
 
-        <div className="flex gap-2">
+        <div className="flex flex-wrap gap-3">
+
           {[1, 2, 3, 4, 5].map((star) => (
             <button
               key={star}
@@ -83,44 +96,73 @@ export default function ReviewForm({ productId }: Props) {
               className="transition hover:scale-110 disabled:cursor-not-allowed"
             >
               <Star
-                size={30}
-                fill={star <= rating ? "currentColor" : "none"}
-                className={
+                size={34}
+                fill={
+                  star <= rating
+                    ? "currentColor"
+                    : "none"
+                }
+                className={`transition ${
                   star <= rating
                     ? "text-yellow-400"
                     : "text-gray-300"
-                }
+                }`}
               />
             </button>
           ))}
+
         </div>
+
       </div>
 
       {/* Review */}
+
       <div className="mt-8">
-        <label className="mb-2 block font-medium text-gray-700">
-          Your Review
-        </label>
+
+        <div className="mb-2 flex items-center justify-between">
+
+          <label className="font-semibold text-gray-700">
+            Your Review
+          </label>
+
+          <span className="text-sm text-gray-400">
+            {review.length}/500
+          </span>
+
+        </div>
 
         <textarea
           rows={6}
-          value={review}
+          maxLength={500}
           disabled={loading}
-          onChange={(e) => setReview(e.target.value)}
-          placeholder="Tell us what you think about this product..."
-          className="w-full rounded-2xl border border-gray-200 p-4 outline-none transition focus:border-sky-500"
+          value={review}
+          onChange={(e) =>
+            setReview(e.target.value)
+          }
+          placeholder="Tell other customers what you liked about this product..."
+          className="min-h-[180px] w-full rounded-2xl border border-gray-200 p-5 text-gray-700 outline-none transition focus:border-sky-500 focus:ring-2 focus:ring-sky-100"
         />
+
       </div>
 
-      {/* Submit */}
+      {/* Button */}
+
       <button
         type="button"
-        onClick={submitReview}
         disabled={loading}
-        className="mt-8 w-full rounded-2xl bg-sky-500 py-4 text-lg font-semibold text-white transition hover:bg-sky-600 disabled:cursor-not-allowed disabled:opacity-60"
+        onClick={submitReview}
+        className="mt-8 flex w-full items-center justify-center rounded-2xl bg-sky-500 py-4 text-lg font-semibold text-white transition hover:bg-sky-600 disabled:cursor-not-allowed disabled:opacity-60"
       >
-        {loading ? "Submitting Review..." : "Submit Review"}
+        {loading ? (
+          <div className="flex items-center gap-3">
+            <div className="h-5 w-5 animate-spin rounded-full border-2 border-white border-t-transparent" />
+            Submitting...
+          </div>
+        ) : (
+          "Submit Review"
+        )}
       </button>
+
     </section>
   );
 }

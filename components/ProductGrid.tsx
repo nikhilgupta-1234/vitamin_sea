@@ -10,9 +10,7 @@ interface Props {
   products: Product[];
 }
 
-export default function ProductGrid({
-  products,
-}: Props) {
+export default function ProductGrid({ products }: Props) {
   const [search, setSearch] = useState("");
   const [category, setCategory] = useState("All");
   const [sort, setSort] = useState("");
@@ -26,7 +24,7 @@ export default function ProductGrid({
     let filtered = [...products];
 
     // Search
-    if (search) {
+    if (search.trim()) {
       filtered = filtered.filter((product) =>
         product.name
           .toLowerCase()
@@ -42,46 +40,68 @@ export default function ProductGrid({
     }
 
     // Sort
-    if (sort === "low") {
-      filtered.sort((a, b) => a.price - b.price);
-    }
+    switch (sort) {
+      case "low":
+        filtered.sort((a, b) => a.price - b.price);
+        break;
 
-    if (sort === "high") {
-      filtered.sort((a, b) => b.price - a.price);
+      case "high":
+        filtered.sort((a, b) => b.price - a.price);
+        break;
+
+      case "az":
+        filtered.sort((a, b) =>
+          a.name.localeCompare(b.name)
+        );
+        break;
+
+      case "za":
+        filtered.sort((a, b) =>
+          b.name.localeCompare(a.name)
+        );
+        break;
     }
 
     return filtered;
   }, [products, search, category, sort]);
 
+  function clearFilters() {
+    setSearch("");
+    setCategory("All");
+    setSort("");
+  }
+
   return (
     <>
-      {/* Premium Filter Section */}
-      <div className="mb-14 rounded-[32px] bg-white p-8 shadow-xl">
+      {/* Filters */}
+      <section className="mb-10 rounded-3xl bg-white p-4 shadow-lg sm:p-6 lg:mb-14 lg:p-8">
         {/* Search */}
         <div className="relative">
           <Search
             size={20}
-            className="absolute left-5 top-1/2 -translate-y-1/2 text-gray-400"
+            className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400"
           />
 
           <input
             type="text"
-            placeholder="Search your perfect accessory..."
+            placeholder="Search products..."
             value={search}
-            onChange={(e) => setSearch(e.target.value)}
-            className="w-full rounded-2xl border border-gray-200 bg-gray-50 py-4 pl-14 pr-5 outline-none transition focus:border-sky-500 focus:bg-white"
+            onChange={(e) =>
+              setSearch(e.target.value)
+            }
+            className="w-full rounded-2xl border border-gray-200 bg-gray-50 py-3 pl-12 pr-4 text-sm outline-none transition focus:border-sky-500 focus:bg-white sm:py-4 sm:pl-14 sm:text-base"
           />
         </div>
 
-        {/* Category Pills */}
-        <div className="mt-8 flex flex-wrap gap-3">
+        {/* Categories */}
+        <div className="mt-6 flex flex-wrap gap-2 sm:gap-3">
           {categories.map((item) => (
             <button
               key={item}
               onClick={() => setCategory(item)}
-              className={`rounded-full px-6 py-3 text-sm font-medium transition ${
+              className={`rounded-full px-4 py-2 text-sm font-medium transition sm:px-6 sm:py-3 ${
                 category === item
-                  ? "bg-sky-500 text-white shadow-lg"
+                  ? "bg-sky-500 text-white shadow"
                   : "bg-sky-50 text-gray-700 hover:bg-sky-100"
               }`}
             >
@@ -90,12 +110,14 @@ export default function ProductGrid({
           ))}
         </div>
 
-        {/* Bottom Row */}
-        <div className="mt-8 flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
+        {/* Bottom Controls */}
+        <div className="mt-6 flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
           <select
             value={sort}
-            onChange={(e) => setSort(e.target.value)}
-            className="rounded-2xl border border-gray-200 bg-white px-5 py-3 outline-none focus:border-sky-500"
+            onChange={(e) =>
+              setSort(e.target.value)
+            }
+            className="w-full rounded-2xl border border-gray-200 bg-white px-4 py-3 outline-none focus:border-sky-500 lg:w-64"
           >
             <option value="">Sort Products</option>
             <option value="low">
@@ -104,40 +126,56 @@ export default function ProductGrid({
             <option value="high">
               Price: High to Low
             </option>
+            <option value="az">
+              Name: A-Z
+            </option>
+            <option value="za">
+              Name: Z-A
+            </option>
           </select>
 
           <button
-            onClick={() => {
-              setSearch("");
-              setCategory("All");
-              setSort("");
-            }}
-            className="flex items-center gap-2 rounded-2xl border border-gray-200 px-6 py-3 text-gray-600 transition hover:bg-red-50 hover:text-red-500"
+            onClick={clearFilters}
+            className="flex w-full items-center justify-center gap-2 rounded-2xl border border-gray-200 px-5 py-3 text-gray-600 transition hover:bg-red-50 hover:text-red-500 lg:w-auto"
           >
             <X size={18} />
             Clear Filters
           </button>
         </div>
-      </div>
+      </section>
 
       {/* Product Count */}
-      <p className="mb-8 text-gray-500">
-        {filteredProducts.length} Products Found
-      </p>
+      <div className="mb-6 flex items-center justify-between">
+        <p className="text-sm text-gray-500 sm:text-base">
+          Showing{" "}
+          <span className="font-semibold text-[#143D60]">
+            {filteredProducts.length}
+          </span>{" "}
+          product
+          {filteredProducts.length !== 1 && "s"}
+        </p>
+      </div>
 
       {/* Products */}
       {filteredProducts.length === 0 ? (
-        <div className="rounded-3xl bg-white p-20 text-center shadow">
+        <div className="rounded-3xl bg-white px-6 py-16 text-center shadow">
           <h3 className="text-2xl font-semibold text-[#143D60]">
             No Products Found
           </h3>
 
           <p className="mt-3 text-gray-500">
-            Try changing your filters.
+            Try changing your search or filters.
           </p>
+
+          <button
+            onClick={clearFilters}
+            className="mt-6 rounded-full bg-sky-500 px-6 py-3 text-white transition hover:bg-sky-600"
+          >
+            Reset Filters
+          </button>
         </div>
       ) : (
-        <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+        <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 xl:grid-cols-4">
           {filteredProducts.map((product) => (
             <ProductCard
               key={product.id}

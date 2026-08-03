@@ -8,9 +8,7 @@ export default function AuthForm() {
   const router = useRouter();
 
   const [loading, setLoading] = useState(false);
-
   const [email, setEmail] = useState("");
-
   const [password, setPassword] = useState("");
 
   async function signIn() {
@@ -50,41 +48,39 @@ export default function AuthForm() {
   }
 
   return (
-    <div className="bg-white rounded-3xl shadow-xl p-10 w-full max-w-md">
-
-      <h1 className="text-4xl font-serif text-center text-sky-600 mb-8">
+    <div className="mx-auto w-full max-w-md rounded-3xl bg-white p-6 shadow-xl sm:p-8 lg:p-10">
+      <h1 className="mb-8 text-center font-serif text-3xl text-sky-600 sm:text-4xl">
         Vitamin Sea
       </h1>
 
       <input
-        className="border rounded-xl w-full p-4 mb-4"
+        className="mb-4 w-full rounded-xl border p-4 outline-none transition focus:border-sky-500"
         placeholder="Email"
         value={email}
-        onChange={(e)=>setEmail(e.target.value)}
+        onChange={(e) => setEmail(e.target.value)}
       />
 
       <input
         type="password"
-        className="border rounded-xl w-full p-4 mb-6"
+        className="mb-6 w-full rounded-xl border p-4 outline-none transition focus:border-sky-500"
         placeholder="Password"
         value={password}
-        onChange={(e)=>setPassword(e.target.value)}
+        onChange={(e) => setPassword(e.target.value)}
       />
 
       <button
         onClick={signIn}
-        className="w-full bg-sky-500 text-white rounded-xl p-4 mb-3"
+        className="mb-3 w-full rounded-xl bg-sky-500 p-4 font-semibold text-white transition hover:bg-sky-600"
       >
         {loading ? "Loading..." : "Login"}
       </button>
 
       <button
         onClick={signUp}
-        className="w-full border border-sky-500 text-sky-500 rounded-xl p-4"
+        className="w-full rounded-xl border border-sky-500 p-4 font-semibold text-sky-500 transition hover:bg-sky-50"
       >
         Create Account
       </button>
-
     </div>
   );
 }

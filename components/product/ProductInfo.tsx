@@ -29,69 +29,71 @@ export default function ProductInfo({
   const router = useRouter();
   const dispatch = useAppDispatch();
 
-  const [quantity, setQuantity] =
-    useState(1);
+  const [quantity, setQuantity] = useState(1);
 
-  const isWishlisted = useAppSelector(
-    (state) =>
-      state.wishlist.items.some(
-        (item) => item.id === product.id
-      )
+  const isWishlisted = useAppSelector((state) =>
+    state.wishlist.items.some(
+      (item) => item.id === product.id
+    )
   );
 
   const addItem = () => {
-    for (
-      let i = 0;
-      i < quantity;
-      i++
-    ) {
+    for (let i = 0; i < quantity; i++) {
       dispatch(addToCart(product));
     }
   };
 
   return (
-    <div className="sticky top-24 h-fit">
+    <div className="lg:sticky lg:top-24 h-fit">
 
-      <div className="mb-4 flex items-center gap-1 text-yellow-400">
-        {[1,2,3,4,5].map((star)=>(
-          <Star
-            key={star}
-            size={18}
-            fill="currentColor"
-          />
-        ))}
+      {/* Rating */}
+      <div className="mb-4 flex flex-wrap items-center gap-2">
+        <div className="flex text-yellow-400">
+          {[1, 2, 3, 4, 5].map((star) => (
+            <Star
+              key={star}
+              size={18}
+              fill="currentColor"
+            />
+          ))}
+        </div>
 
-        <span className="ml-2 text-gray-500">
+        <span className="text-sm text-gray-500">
           (128 Reviews)
         </span>
       </div>
 
-      <h1 className="text-5xl font-serif text-[#143D60]">
+      {/* Product Name */}
+      <h1 className="font-serif text-3xl text-[#143D60] sm:text-4xl lg:text-5xl">
         {product.name}
       </h1>
 
-      <p className="mt-6 text-4xl font-bold text-sky-600">
+      {/* Price */}
+      <p className="mt-4 text-3xl font-bold text-sky-600 sm:text-4xl">
         ₹{product.price}
       </p>
 
-      <p className="mt-8 leading-8 text-gray-600">
+      {/* Description */}
+      <p className="mt-6 text-base leading-7 text-gray-600 sm:text-lg sm:leading-8">
         {product.description}
       </p>
 
-      <div className="mt-10">
+      {/* Quantity */}
+      <div className="mt-8">
         <QuantitySelector
           quantity={quantity}
           setQuantity={setQuantity}
         />
       </div>
 
-      <div className="mt-10 flex gap-4">
+      {/* Buttons */}
+      <div className="mt-8 flex flex-col gap-4 sm:flex-row">
 
         <button
           onClick={() =>
             dispatch(toggleWishlist(product))
           }
-          className="flex h-14 w-14 items-center justify-center rounded-2xl border hover:bg-red-50"
+          className="flex h-14 w-full items-center justify-center rounded-2xl border transition hover:bg-red-50 sm:w-14"
         >
           <Heart
             fill={
@@ -109,44 +111,65 @@ export default function ProductInfo({
 
         <button
           onClick={addItem}
-          className="flex-1 rounded-2xl bg-sky-500 py-4 font-semibold text-white transition hover:bg-sky-600"
+          className="flex flex-1 items-center justify-center gap-2 rounded-2xl bg-sky-500 py-4 font-semibold text-white transition hover:bg-sky-600 active:scale-[0.98]"
         >
-          <div className="flex items-center justify-center gap-2">
-            <ShoppingBag size={20}/>
-            Add to Cart
-          </div>
+          <ShoppingBag size={20} />
+          Add to Cart
         </button>
 
       </div>
 
+      {/* Buy Now */}
       <button
-        onClick={()=>{
+        onClick={() => {
           addItem();
           router.push("/checkout");
         }}
-        className="mt-5 flex w-full items-center justify-center gap-3 rounded-2xl bg-[#143D60] py-4 text-white transition hover:bg-[#0c2f4d]"
+        className="mt-4 flex w-full items-center justify-center gap-3 rounded-2xl bg-[#143D60] py-4 font-semibold text-white transition hover:bg-[#0c2f4d] active:scale-[0.98]"
       >
-        <Zap size={20}/>
+        <Zap size={20} />
         Buy Now
       </button>
 
-      <div className="mt-12 rounded-3xl bg-white p-6 shadow-sm">
+      {/* Product Info */}
+      <div className="mt-10 rounded-3xl border bg-white p-5 shadow-sm sm:p-6">
 
-        <div className="flex justify-between border-b py-4">
-          <span>Availability</span>
-          <span className="font-semibold text-green-600">
-            In Stock
+        <div className="flex items-center justify-between border-b py-4">
+          <span className="text-gray-600">
+            Availability
+          </span>
+
+          <span
+            className={`font-semibold ${
+              Number(product.stock) > 0
+                ? "text-green-600"
+                : "text-red-600"
+            }`}
+          >
+            {Number(product.stock) > 0
+              ? "In Stock"
+              : "Out of Stock"}
           </span>
         </div>
 
-        <div className="flex justify-between border-b py-4">
-          <span>Category</span>
-          <span>{product.category}</span>
+        <div className="flex items-center justify-between border-b py-4">
+          <span className="text-gray-600">
+            Category
+          </span>
+
+          <span className="font-medium text-[#143D60]">
+            {product.category}
+          </span>
         </div>
 
-        <div className="flex justify-between py-4">
-          <span>Shipping</span>
-          <span>Free</span>
+        <div className="flex items-center justify-between py-4">
+          <span className="text-gray-600">
+            Shipping
+          </span>
+
+          <span className="font-medium text-green-600">
+            Free Delivery
+          </span>
         </div>
 
       </div>

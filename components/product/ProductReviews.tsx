@@ -1,9 +1,10 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { MessageSquare } from "lucide-react";
+
 import RatingStars from "./RatingStars";
 import { getReviews } from "@/lib/reviews";
-import { MessageSquare } from "lucide-react";
 
 interface Props {
   productId: number;
@@ -51,11 +52,11 @@ export default function ProductReviews({
 
   if (loading) {
     return (
-      <section className="mt-20 rounded-[35px] bg-white p-16 shadow-sm">
+      <section className="mt-12 rounded-3xl bg-white p-8 shadow-sm sm:mt-16 sm:p-12 lg:mt-20 lg:p-16">
         <div className="flex flex-col items-center justify-center">
-          <div className="h-12 w-12 animate-spin rounded-full border-4 border-sky-500 border-t-transparent"></div>
+          <div className="h-12 w-12 animate-spin rounded-full border-4 border-sky-500 border-t-transparent" />
 
-          <p className="mt-6 text-lg text-gray-500">
+          <p className="mt-6 text-center text-gray-500">
             Loading Reviews...
           </p>
         </div>
@@ -64,14 +65,16 @@ export default function ProductReviews({
   }
 
   return (
-    <section className="mt-20">
+    <section className="mt-12 sm:mt-16 lg:mt-20">
+
       {/* Header */}
+      <div className="mb-8 rounded-3xl bg-white p-6 shadow-sm sm:p-8 lg:mb-10 lg:p-10">
 
-      <div className="mb-10 rounded-[35px] bg-white p-10 shadow-sm">
-        <div className="flex flex-col gap-8 md:flex-row md:items-center md:justify-between">
+        <div className="flex flex-col gap-8 lg:flex-row lg:items-center lg:justify-between">
 
-          <div>
-            <h2 className="text-4xl font-serif text-[#143D60]">
+          <div className="text-center lg:text-left">
+
+            <h2 className="font-serif text-3xl text-[#143D60] sm:text-4xl">
               Customer Reviews
             </h2>
 
@@ -81,15 +84,16 @@ export default function ProductReviews({
                 ? "Review"
                 : "Reviews"}
             </p>
+
           </div>
 
-          <div className="text-center md:text-right">
+          <div className="text-center lg:text-right">
 
-            <p className="text-6xl font-bold text-[#143D60]">
+            <p className="text-5xl font-bold text-[#143D60] sm:text-6xl">
               {averageRating.toFixed(1)}
             </p>
 
-            <div className="mt-3 flex justify-center md:justify-end">
+            <div className="mt-3 flex justify-center lg:justify-end">
               <RatingStars
                 rating={Math.round(
                   averageRating
@@ -98,22 +102,25 @@ export default function ProductReviews({
             </div>
 
           </div>
+
         </div>
+
       </div>
 
-      {/* Empty */}
-
+      {/* Empty State */}
       {reviews.length === 0 && (
-        <div className="rounded-[35px] bg-white p-16 text-center shadow-sm">
+        <div className="rounded-3xl bg-white p-10 text-center shadow-sm sm:p-16">
 
-          <div className="mx-auto flex h-20 w-20 items-center justify-center rounded-full bg-sky-100">
+          <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-sky-100 sm:h-20 sm:w-20">
+
             <MessageSquare
-              size={34}
+              size={32}
               className="text-sky-500"
             />
+
           </div>
 
-          <h3 className="mt-6 text-3xl font-semibold text-[#143D60]">
+          <h3 className="mt-6 text-2xl font-semibold text-[#143D60] sm:text-3xl">
             No Reviews Yet
           </h3>
 
@@ -121,25 +128,25 @@ export default function ProductReviews({
             Be the first customer to review this
             beautiful product.
           </p>
+
         </div>
       )}
 
       {/* Reviews */}
-
-      <div className="space-y-8">
+      <div className="space-y-6 lg:space-y-8">
 
         {reviews.map((review) => (
 
           <div
             key={review.id}
-            className="rounded-[30px] bg-white p-8 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-lg"
+            className="rounded-3xl bg-white p-6 shadow-sm transition duration-300 hover:-translate-y-1 hover:shadow-lg sm:p-8"
           >
 
-            <div className="flex items-start justify-between">
+            <div className="flex flex-col gap-5 sm:flex-row sm:items-start sm:justify-between">
 
-              <div className="flex items-center gap-5">
+              <div className="flex items-start gap-4">
 
-                <div className="flex h-14 w-14 items-center justify-center rounded-full bg-sky-500 text-lg font-bold text-white">
+                <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-sky-500 text-lg font-bold text-white sm:h-14 sm:w-14">
                   {review.customer_name
                     .charAt(0)
                     .toUpperCase()}
@@ -147,7 +154,7 @@ export default function ProductReviews({
 
                 <div>
 
-                  <h3 className="text-xl font-semibold text-[#143D60]">
+                  <h3 className="break-words text-lg font-semibold text-[#143D60] sm:text-xl">
                     {review.customer_name}
                   </h3>
 
@@ -173,7 +180,7 @@ export default function ProductReviews({
 
             </div>
 
-            <p className="mt-6 leading-8 text-gray-600">
+            <p className="mt-6 break-words text-gray-600 leading-7 sm:leading-8">
               {review.review}
             </p>
 
@@ -182,6 +189,7 @@ export default function ProductReviews({
         ))}
 
       </div>
+
     </section>
   );
 }

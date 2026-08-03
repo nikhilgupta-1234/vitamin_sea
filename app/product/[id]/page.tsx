@@ -1,4 +1,7 @@
 import { notFound } from "next/navigation";
+import Link from "next/link";
+import { ChevronRight } from "lucide-react";
+
 import { supabase } from "@/lib/supabase";
 
 import ProductGallery from "@/components/product/ProductGallery";
@@ -30,31 +33,83 @@ export default async function ProductPage({
   }
 
   return (
-    <main className="bg-slate-50 py-16">
-      <div className="mx-auto max-w-7xl px-6">
-        <div className="grid gap-16 lg:grid-cols-2">
+    <main className="min-h-screen bg-[#F8F4EC]">
+
+      <div className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8 lg:py-12">
+
+        {/* Breadcrumb */}
+
+        <nav className="mb-8 flex flex-wrap items-center gap-2 text-sm text-gray-500">
+
+          <Link
+            href="/"
+            className="hover:text-sky-600"
+          >
+            Home
+          </Link>
+
+          <ChevronRight size={16} />
+
+          <Link
+            href="/shop"
+            className="hover:text-sky-600"
+          >
+            Shop
+          </Link>
+
+          <ChevronRight size={16} />
+
+          <span className="font-medium text-[#143D60]">
+            {product.name}
+          </span>
+
+        </nav>
+
+        {/* Product */}
+
+        <section className="grid gap-10 lg:grid-cols-2 lg:gap-16">
+
           <ProductGallery image={product.image} />
 
           <ProductInfo product={product} />
-        </div>
 
-        <ProductTabs
-          description={product.description}
-        />
+        </section>
 
-        <ProductReviews
-          productId={product.id}
-        />
+        {/* Tabs */}
 
-        <ReviewForm
-          productId={product.id}
-        />
+        <section className="mt-12 lg:mt-16">
+          <ProductTabs
+            description={product.description}
+          />
+        </section>
 
-        <RelatedProducts
-          category={product.category}
-          currentId={product.id}
-        />
+        {/* Reviews */}
+
+        <section className="mt-12 lg:mt-16">
+          <ProductReviews
+            productId={product.id}
+          />
+        </section>
+
+        {/* Review Form */}
+
+        <section className="mt-10 lg:mt-14">
+          <ReviewForm
+            productId={product.id}
+          />
+        </section>
+
+        {/* Related Products */}
+
+        <section className="mt-14 lg:mt-20">
+          <RelatedProducts
+            category={product.category}
+            currentId={product.id}
+          />
+        </section>
+
       </div>
+
     </main>
   );
 }

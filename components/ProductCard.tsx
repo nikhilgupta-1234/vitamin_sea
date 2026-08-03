@@ -31,9 +31,10 @@ export default function ProductCard({
     )
   );
 
+  const inStock = Number(product.stock) > 0;
+
   return (
     <div className="group overflow-hidden rounded-3xl bg-white shadow-sm transition-all duration-300 hover:-translate-y-2 hover:shadow-2xl">
-
       <Link href={`/product/${product.id}`}>
 
         {/* Image */}
@@ -42,10 +43,10 @@ export default function ProductCard({
           <Image
             src={product.image || "/placeholder.png"}
             alt={product.name}
-            width={500}
-            height={500}
-            priority={false}
-            className="h-72 w-full object-cover transition duration-500 group-hover:scale-110"
+            width={600}
+            height={600}
+            sizes="(max-width:640px) 100vw, (max-width:1024px) 50vw, 25vw"
+            className="h-56 w-full object-cover transition duration-500 group-hover:scale-110 sm:h-64 lg:h-72"
           />
 
           {/* Wishlist */}
@@ -55,7 +56,7 @@ export default function ProductCard({
               e.stopPropagation();
               dispatch(toggleWishlist(product));
             }}
-            className="absolute right-4 top-4 flex h-11 w-11 items-center justify-center rounded-full bg-white shadow-md transition hover:scale-110"
+            className="absolute right-3 top-3 flex h-10 w-10 items-center justify-center rounded-full bg-white shadow-md transition hover:scale-110 sm:h-11 sm:w-11"
           >
             <Heart
               size={18}
@@ -68,59 +69,97 @@ export default function ProductCard({
             />
           </button>
 
-          {/* Stock Badge */}
-          {"stock" in product && (
-            <span
-              className={`absolute left-4 top-4 rounded-full px-3 py-1 text-xs font-semibold ${
-                Number(product.stock) > 0
-                  ? "bg-green-100 text-green-700"
-                  : "bg-red-100 text-red-700"
-              }`}
-            >
-              {Number(product.stock) > 0
-                ? "In Stock"
-                : "Out of Stock"}
+          {/* Category */}
+          <span className="absolute left-3 top-3 rounded-full bg-white/90 px-3 py-1 text-xs font-semibold text-[#143D60] backdrop-blur">
+            {product.category}
+          </span>
+
+          {/* Featured */}
+          {product.featured && (
+            <span className="absolute bottom-3 left-3 rounded-full bg-sky-500 px-3 py-1 text-xs font-semibold text-white">
+              Bestseller
             </span>
           )}
         </div>
 
         {/* Content */}
-        <div className="p-5">
+        <div className="p-4 sm:p-5">
 
-          <div className="mb-3 flex text-yellow-400">
+          {/* Rating */}
+          <div className="mb-3 flex items-center gap-1 text-yellow-400">
             {[1, 2, 3, 4, 5].map((star) => (
               <Star
                 key={star}
-                size={16}
+                size={15}
                 fill="currentColor"
               />
             ))}
+
+            <span className="ml-2 text-xs text-gray-500">
+              (5.0)
+            </span>
           </div>
 
-          <h3 className="line-clamp-2 text-lg font-semibold text-[#143D60] transition group-hover:text-sky-600">
+          {/* Name */}
+          <h3 className="line-clamp-2 text-base font-semibold text-[#143D60] transition group-hover:text-sky-600 sm:text-lg">
             {product.name}
           </h3>
 
-          <p className="mt-3 text-2xl font-bold text-sky-600">
-            ₹{product.price}
+          {/* Description */}
+          <p className="mt-2 line-clamp-2 text-sm text-gray-500">
+            {product.description}
           </p>
 
+          {/* Price */}
+          <div className="mt-4 flex items-center justify-between">
+
+            <div>
+              <p className="text-2xl font-bold text-sky-600">
+                ₹{product.price}
+              </p>
+
+              <p
+                className={`mt-1 text-sm font-medium ${
+                  inStock
+                    ? "text-green-600"
+                    : "text-red-500"
+                }`}
+              >
+                {inStock
+                  ? `${product.stock} in stock`
+                  : "Out of stock"}
+              </p>
+            </div>
+
+          </div>
+
+          {/* Button */}
           <button
+            disabled={!inStock}
             onClick={(e) => {
               e.preventDefault();
               e.stopPropagation();
-              dispatch(addToCart(product));
+
+              if (inStock) {
+                dispatch(addToCart(product));
+              }
             }}
-            className="mt-6 flex w-full items-center justify-center gap-2 rounded-full bg-sky-500 py-3 font-medium text-white transition hover:bg-sky-600 active:scale-[0.98]"
+            className={`mt-5 flex w-full items-center justify-center gap-2 rounded-full py-3 font-medium transition active:scale-95 ${
+              inStock
+                ? "bg-sky-500 text-white hover:bg-sky-600"
+                : "cursor-not-allowed bg-gray-300 text-gray-600"
+            }`}
           >
             <ShoppingBag size={18} />
-            Add to Cart
+
+            {inStock
+              ? "Add to Cart"
+              : "Out of Stock"}
           </button>
 
         </div>
 
       </Link>
-
     </div>
   );
 }

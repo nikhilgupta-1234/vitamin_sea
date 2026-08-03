@@ -9,35 +9,48 @@ export default function QuantitySelector({
   quantity,
   setQuantity,
 }: Props) {
+  const decrease = () => {
+    if (quantity > 1) {
+      setQuantity(quantity - 1);
+    }
+  };
+
+  const increase = () => {
+    setQuantity(quantity + 1);
+  };
+
   return (
-    <div className="flex items-center gap-5">
-      <span className="font-medium text-gray-600">
+    <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:gap-5">
+
+      <span className="text-sm font-semibold uppercase tracking-wide text-gray-500">
         Quantity
       </span>
 
-      <div className="flex items-center overflow-hidden rounded-xl border">
+      <div className="flex w-fit items-center overflow-hidden rounded-2xl border border-gray-200 bg-white shadow-sm">
+
         <button
-          onClick={() =>
-            setQuantity(Math.max(1, quantity - 1))
-          }
-          className="px-4 py-2 text-xl hover:bg-gray-100"
+          type="button"
+          onClick={decrease}
+          disabled={quantity === 1}
+          className="flex h-12 w-12 items-center justify-center text-2xl font-medium transition hover:bg-sky-50 disabled:cursor-not-allowed disabled:opacity-40"
         >
           −
         </button>
 
-        <span className="w-12 text-center">
+        <div className="flex h-12 min-w-[60px] items-center justify-center border-x border-gray-200 px-4 text-lg font-bold text-[#143D60]">
           {quantity}
-        </span>
+        </div>
 
         <button
-          onClick={() =>
-            setQuantity(quantity + 1)
-          }
-          className="px-4 py-2 text-xl hover:bg-gray-100"
+          type="button"
+          onClick={increase}
+          className="flex h-12 w-12 items-center justify-center text-2xl font-medium transition hover:bg-sky-50"
         >
           +
         </button>
+
       </div>
+
     </div>
   );
 }
