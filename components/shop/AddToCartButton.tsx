@@ -6,6 +6,7 @@ import { ShoppingBag, Check } from "lucide-react";
 import { Product } from "@/types/product";
 import { useAppDispatch } from "@/store/hooks";
 import { addToCart } from "@/store/cartSlice";
+import { addCartItem } from "@/lib/cart";
 
 interface Props {
   product: Product;
@@ -17,15 +18,30 @@ export default function AddToCartButton({
   const dispatch = useAppDispatch();
 
   const [added, setAdded] = useState(false);
+  const [loading, setLoading] = useState(false);
 
-  function handleAddToCart() {
-    dispatch(addToCart(product));
+  async function handleAddToCart() {
+    if (loading) return;
 
-    setAdded(true);
+    try {
+      setLoading(true);
 
-    setTimeout(() => {
-      setAdded(false);
-    }, 2000);
+      // Update Redux instantly
+      dispatch(addToCart(product));
+
+      // Save to Supabase (only if logged in)
+      await addCartItem(product.id);
+
+      setAdded(true);
+
+      setTimeout(() => {
+        setAdded(false);
+      }, 2000);
+    } catch (error) {
+      console.error("Failed to sync cart:", error);
+    } finally {
+      setLoading(false);
+    }
   }
 
   const outOfStock = Number(product.stock) <= 0;
@@ -33,10 +49,15 @@ export default function AddToCartButton({
   return (
     <button
       onClick={handleAddToCart}
-      disabled={outOfStock}
+      disabled={outOfStock || loading}
       className="flex w-full items-center justify-center gap-3 rounded-2xl bg-sky-500 px-6 py-3 text-base font-semibold text-white transition duration-300 hover:bg-sky-600 active:scale-[0.98] disabled:cursor-not-allowed disabled:bg-gray-400 sm:py-4 sm:text-lg"
     >
-      {added ? (
+      {loading ? (
+        <>
+          <ShoppingBag size={20} />
+          Adding...
+        </>
+      ) : added ? (
         <>
           <Check size={20} />
           Added to Cart

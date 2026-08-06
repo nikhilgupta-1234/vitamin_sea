@@ -22,10 +22,17 @@ import {
   useAppSelector,
 } from "@/store/hooks";
 
+import {
+  updateCartQuantity,
+  removeCartItem,
+} from "@/lib/cart";
+
 export default function CartPage() {
   const dispatch = useAppDispatch();
 
-  const items = useAppSelector((state) => state.cart.items);
+  const items = useAppSelector(
+    (state) => state.cart.items
+  );
 
   const subtotal = items.reduce(
     (sum, item) => sum + item.price * item.quantity,
@@ -33,14 +40,57 @@ export default function CartPage() {
   );
 
   const shipping = 0;
-
   const total = subtotal + shipping;
+
+  async function handleIncrease(
+    id: number,
+    quantity: number
+  ) {
+    dispatch(increaseQuantity(id));
+
+    try {
+      await updateCartQuantity(
+        id,
+        quantity + 1
+      );
+    } catch (error) {
+      console.error(error);
+    }
+  }
+
+  async function handleDecrease(
+    id: number,
+    quantity: number
+  ) {
+    dispatch(decreaseQuantity(id));
+
+    try {
+      if (quantity > 1) {
+        await updateCartQuantity(
+          id,
+          quantity - 1
+        );
+      } else {
+        await removeCartItem(id);
+      }
+    } catch (error) {
+      console.error(error);
+    }
+  }
+
+  async function handleRemove(id: number) {
+    dispatch(removeFromCart(id));
+
+    try {
+      await removeCartItem(id);
+    } catch (error) {
+      console.error(error);
+    }
+  }
 
   return (
     <main className="min-h-screen bg-slate-50 py-16">
       <div className="mx-auto max-w-7xl px-5">
-
-        {/* Heading */}
 
         <div className="mb-14">
           <h1 className="font-serif text-5xl text-[#143D60]">
@@ -48,7 +98,8 @@ export default function CartPage() {
           </h1>
 
           <p className="mt-3 text-gray-500">
-            {items.length} {items.length === 1 ? "Item" : "Items"} in your cart
+            {items.length}{" "}
+            {items.length === 1 ? "Item" : "Items"} in your cart
           </p>
         </div>
 
@@ -80,8 +131,6 @@ export default function CartPage() {
         ) : (
           <div className="grid gap-10 lg:grid-cols-[2fr_420px]">
 
-            {/* Products */}
-
             <div className="space-y-6">
               {items.map((item) => (
                 <div
@@ -108,14 +157,14 @@ export default function CartPage() {
                             {item.name}
                           </h3>
 
-                          <p className="mt-2 text-sky-600 text-xl font-bold">
+                          <p className="mt-2 text-xl font-bold text-sky-600">
                             ₹{item.price}
                           </p>
                         </div>
 
                         <button
                           onClick={() =>
-                            dispatch(removeFromCart(item.id))
+                            handleRemove(item.id)
                           }
                           className="flex items-center gap-2 text-red-500 transition hover:text-red-600"
                         >
@@ -131,7 +180,10 @@ export default function CartPage() {
 
                           <button
                             onClick={() =>
-                              dispatch(decreaseQuantity(item.id))
+                              handleDecrease(
+                                item.id,
+                                item.quantity
+                              )
                             }
                             className="flex h-11 w-11 items-center justify-center hover:bg-slate-100"
                           >
@@ -144,7 +196,10 @@ export default function CartPage() {
 
                           <button
                             onClick={() =>
-                              dispatch(increaseQuantity(item.id))
+                              handleIncrease(
+                                item.id,
+                                item.quantity
+                              )
                             }
                             className="flex h-11 w-11 items-center justify-center hover:bg-slate-100"
                           >
@@ -154,7 +209,7 @@ export default function CartPage() {
                         </div>
 
                         <div className="text-right">
-                          <p className="text-gray-500 text-sm">
+                          <p className="text-sm text-gray-500">
                             Total
                           </p>
 
@@ -170,7 +225,6 @@ export default function CartPage() {
                 </div>
               ))}
             </div>
-
             {/* Summary */}
 
             <div className="sticky top-24 h-fit rounded-[35px] bg-white p-8 shadow-sm">
@@ -207,7 +261,7 @@ export default function CartPage() {
                   </span>
 
                   <span>
-                    3-7 Days
+                    3–7 Days
                   </span>
                 </div>
 

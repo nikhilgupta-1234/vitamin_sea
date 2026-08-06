@@ -1,22 +1,27 @@
 import Image from "next/image";
 import Link from "next/link";
 import { ArrowRight } from "lucide-react";
+
 import { Product } from "@/types/product";
+import WishlistButton from "@/components/shop/WishlistButton";
 
 interface Props {
   product: Product;
 }
 
-export default function ProductCard({ product }: Props) {
+export default function ProductCard({
+  product,
+}: Props) {
+  const inStock = Number(product.stock) > 0;
+
   return (
     <Link
       href={`/product/${product.id}`}
       className="group block"
     >
-      <div className="overflow-hidden rounded-3xl bg-white shadow-sm transition duration-300 hover:-translate-y-2 hover:shadow-2xl">
+      <div className="overflow-hidden rounded-3xl bg-white shadow-sm transition-all duration-300 hover:-translate-y-2 hover:shadow-2xl">
 
         {/* Product Image */}
-
         <div className="relative overflow-hidden">
 
           <Image
@@ -28,8 +33,10 @@ export default function ProductCard({ product }: Props) {
             className="h-52 w-full object-cover transition duration-500 group-hover:scale-110 sm:h-64 lg:h-72"
           />
 
-          {/* Featured Badge */}
+          {/* Wishlist */}
+          <WishlistButton product={product} />
 
+          {/* Featured Badge */}
           {product.featured && (
             <span className="absolute left-3 top-3 rounded-full bg-sky-500 px-3 py-1 text-xs font-semibold text-white shadow">
               Bestseller
@@ -37,25 +44,19 @@ export default function ProductCard({ product }: Props) {
           )}
 
           {/* Stock Badge */}
-
-          {product.stock !== undefined && (
-            <span
-              className={`absolute right-3 top-3 rounded-full px-3 py-1 text-xs font-semibold shadow ${
-                Number(product.stock) > 0
-                  ? "bg-green-100 text-green-700"
-                  : "bg-red-100 text-red-700"
-              }`}
-            >
-              {Number(product.stock) > 0
-                ? "In Stock"
-                : "Out of Stock"}
-            </span>
-          )}
+          <span
+            className={`absolute bottom-3 right-3 rounded-full px-3 py-1 text-xs font-semibold shadow ${
+              inStock
+                ? "bg-green-100 text-green-700"
+                : "bg-red-100 text-red-700"
+            }`}
+          >
+            {inStock ? "In Stock" : "Out of Stock"}
+          </span>
 
         </div>
 
         {/* Content */}
-
         <div className="p-4 sm:p-5">
 
           <h3 className="line-clamp-2 min-h-[52px] text-base font-semibold text-[#143D60] transition group-hover:text-sky-600 sm:text-lg">
@@ -71,6 +72,10 @@ export default function ProductCard({ product }: Props) {
             <div>
               <p className="text-xl font-bold text-sky-600 sm:text-2xl">
                 ₹{Number(product.price).toLocaleString("en-IN")}
+              </p>
+
+              <p className="mt-1 text-sm text-gray-500">
+                {product.category}
               </p>
             </div>
 

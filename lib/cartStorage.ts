@@ -22,3 +22,20 @@ export function saveCart(cart: StoredCartItem[]) {
 
   localStorage.setItem(STORAGE_KEY, JSON.stringify(cart));
 }
+const MERGED_KEY = "vitamin-sea-cart-merged";
+
+export function isCartMerged() {
+  if (typeof window === "undefined") return false;
+
+  return localStorage.getItem(MERGED_KEY) === "true";
+}
+
+export function setCartMerged(value: boolean) {
+  if (typeof window === "undefined") return;
+
+  if (value) {
+    localStorage.setItem(MERGED_KEY, "true");
+  } else {
+    localStorage.removeItem(MERGED_KEY);
+  }
+}
